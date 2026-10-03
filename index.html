@@ -171,6 +171,12 @@
       <div class="gs-box" id="searchResults" role="listbox" aria-label="Search results" hidden></div>
     </div>
     <div class="topbar-right">
+      <button class="drive-sync-btn" id="driveSyncBtn" type="button" title="Sync & Export Builds to Google Drive">
+        <svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v10M17 7l-5-5-5 5M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+        </svg>
+        <span>Drive Builds</span>
+      </button>
       <div class="phone-ctl" id="phoneCtl">
         <button class="phone-ctl-open" id="phoneOpen" type="button" aria-expanded="false" aria-controls="dialer"><span class="phone-ctl-icon"><svg class="ic" width="0.875rem" height="0.875rem"><use href="#i-phone"/></svg><i class="dot"></i></span><span class="phone-ctl-time" id="phoneTime"></span></button>
         <button class="phone-ctl-pick" id="phonePick" type="button" aria-haspopup="menu"><span id="phoneName"></span><svg class="ic" width="0.5625rem" height="0.5625rem"><use href="#i-chevron"/></svg></button>
@@ -672,5 +678,6 @@
   <script src="js/dialer.js?v=20261003b"></script>
   <script src="js/search.js?v=20261003b"></script>
   <script src="js/settings.js?v=20261003b"></script>
+  <script type="module" src="/src/drive-sync.ts"></script>
 </body>
 </html>
