@@ -1,0 +1,545 @@
+/* Leads, dialer, and Scanner — coordinated financial-operations workspace */
+:root {
+  --work-ink: #4A5261;
+  --work-muted: #798496;
+  --work-line: #D9DFE9;
+  --work-divider: #EDF0F5;
+  --work-surface: #FFFFFF;
+  --work-soft: #F6F8FC;
+  --work-canvas: #E8EBF2;
+}
+
+/* Leads: clear separation between pipeline, selected company, and live communications. */
+#leadsPage.workspace { background: var(--work-canvas); }
+#leadsPage .panel-leads,
+#leadsPage .panel-comms {
+  background: var(--work-surface);
+  border: 1px solid var(--work-line);
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(25, 35, 58, .045);
+}
+#leadsPage .panel-leads > .panel-head,
+#leadsPage .panel-comms > .panel-head {
+  min-height: 46px;
+  height: 46px;
+  padding: 0 14px;
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--work-divider);
+}
+#leadsPage .panel-title { color: var(--work-ink); font-size: 13px; font-weight: 650; letter-spacing: -.01em; }
+#leadsPage .panel-count { padding: 0; border: 0; border-radius: 0; background: transparent; color: #8993A3; font-size: 10px; font-weight: 500; }
+#leadsPage #leadOptions { display: none; }
+#leadsPage .icon-btn { width: 32px; height: 32px; border-radius: 8px; color: #788397; }
+#leadsPage .icon-btn:hover { background: #F1F4FA; color: #3D66B4; }
+#leadsPage .icon-btn:focus-visible,
+#leadsPage .lead-options-trigger:focus-visible { outline: 2px solid #557BC9; outline-offset: 2px; }
+#leadsPage .panel-leads { overflow: hidden; }
+#leadsPage .lead-list {
+  flex: 0 1 43%; min-height: 155px; max-height: 48%; overflow: auto;
+  border-bottom: 1px solid var(--work-divider); scrollbar-width: thin; scrollbar-color: #C6CEDA transparent;
+}
+#leadsPage .lead-row {
+  min-height: 70px; padding: 11px 13px; column-gap: 10px; row-gap: 4px;
+  border-bottom: 1px solid #EFF2F6; transition: background .14s ease;
+}
+#leadsPage .lead-row:hover { background: #F8FAFD; }
+#leadsPage .lead-row.selected { background: #EAF0FF; box-shadow: none; }
+#leadsPage .lead-company { color: var(--work-ink); font-size: 12px; font-weight: 650; }
+#leadsPage .lead-revenue { color: #33435E; font-size: 12px; font-weight: 650; }
+#leadsPage .lead-contact { color: #707C8E; font-size: 11.5px; }
+#leadsPage .lead-ago { color: #8B95A4; font-size: 10.5px; }
+#leadsPage .track { margin-right: 3px; }
+#leadsPage .track.opened { color: #26825E; }
+
+/* Selected lead: redesigned middle panel with matched side-by-side cards and Inter typography. */
+#leadsPage .panel-detail {
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+#leadsPage .detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+#leadsPage .detail-head {
+  min-height: 64px;
+  margin: 0;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #0F172A;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+}
+#leadsPage .detail-title { min-width: 0; }
+#leadsPage .detail-name {
+  color: #0F172A;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.25;
+}
+#leadsPage .detail-sub {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+  color: #64748B;
+  font-size: .75rem;
+  font-weight: 500;
+}
+#leadsPage .detail-addr {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #475569;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+#leadsPage .detail-addr:hover { color: #2563EB; }
+#leadsPage .detail-addr .ic,
+#leadsPage .detail-time { color: #94A3B8; }
+#leadsPage .detail-time { display: inline-flex; align-items: center; gap: 4px; }
+#leadsPage .acts { display: flex; align-items: center; gap: 6px; }
+#leadsPage .act-btn {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: transform .1s, opacity .1s;
+}
+#leadsPage .act-btn:hover { transform: translateY(-1px); opacity: .92; }
+#leadsPage .act-btn.call { background: #16A34A; color: #FFFFFF; }
+#leadsPage .act-btn.sms { background: #2563EB; color: #FFFFFF; }
+#leadsPage .act-btn.wa { background: #0D9488; color: #FFFFFF; }
+#leadsPage .act-btn.email { background: #7C3AED; color: #FFFFFF; }
+
+#leadsPage .detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+  padding-right: 1px;
+}
+#leadsPage .info-pair,
+#leadsPage .section-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+#leadsPage .section-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  padding: 16px 18px;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#leadsPage .detail-body .section-card > .section-title {
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  margin: 0 0 12px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 1px solid #F1F5F9;
+  border-radius: 0;
+  background: transparent;
+  color: #64748B;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#leadsPage .detail-body .section-card > .section-title .section-title-icon { width: 13px; height: 13px; color: #64748B; }
+#leadsPage .detail-body .fact-label { color: #64748B; font-size: .6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: .03em; }
+#leadsPage .detail-body .fact-val,
+#leadsPage .detail-body .contact-value,
+#leadsPage .detail-body .stmt td:not(.as-of),
+#leadsPage .detail-body .summary,
+#leadsPage .detail-body .feed-text { color: #0F172A; font-size: .8125rem; font-weight: 600; }
+#leadsPage .detail-body .facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+#leadsPage .detail-body .fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+#leadsPage .detail-body .fact.wide { grid-column: 1 / -1; }
+#leadsPage .detail-body .contact-facts { display: flex; flex-direction: column; gap: 8px; }
+#leadsPage .detail-body .contact-fact {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+}
+#leadsPage .detail-body .contact-fact .fact-val { min-width: 0; overflow-wrap: anywhere; }
+#leadsPage .detail-body .stmt {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-variant-numeric: tabular-nums;
+}
+#leadsPage .detail-body .stmt th {
+  color: #64748B;
+  font-size: .6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  padding: 4px 6px;
+  border-bottom: 1px solid #F1F5F9;
+}
+#leadsPage .detail-body .stmt td {
+  padding: 6px;
+  border-bottom: 1px solid #F8FAFC;
+  font-size: .75rem;
+}
+#leadsPage .detail-body .financial-pitch-card {
+  min-height: 64px;
+  border: 1px solid #E2E8F0;
+  border-left: 3px solid #2563EB;
+  border-radius: 8px;
+  background: #F8FAFC;
+  padding: 12px 16px;
+}
+#leadsPage .financial-pitch-card .summary {
+  margin: 0;
+  color: #1E293B;
+  font-size: .8125rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+#leadsPage .notes-section.section-card { min-height: 50px; padding: 12px 16px; }
+#leadsPage .notes-section .section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #F1F5F9;
+}
+#leadsPage .notes-textarea {
+  width: 100%;
+  min-height: 68px;
+  padding: 8px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  background: #F8FAFC;
+  color: #0F172A;
+  font-family: inherit;
+  font-size: .8125rem;
+  line-height: 1.4;
+  outline: none;
+  resize: vertical;
+  transition: border-color .15s ease;
+}
+#leadsPage .notes-textarea:focus { border-color: #2563EB; outline: 2px solid rgba(37,99,235,.12); background: #FFFFFF; }
+
+/* Communications remains chronological and functional, with type cues confined to compact icons. */
+#leadsPage .panel-comms { overflow: hidden; }
+#leadsPage .comms-tabs { gap: 3px; padding: 0; }
+#leadsPage .comms-tabs .tab-btn { height: 32px; padding: 0 9px; border-radius: 7px; color: #697587; font-size: 11px; }
+#leadsPage .comms-tabs .tab-btn.active { background: #F1F5F9; color: #0F172A; font-weight: 600; box-shadow: none; border-bottom: 0; }
+#leadsPage .comms-tabs .tab-btn:focus-visible { outline: 2px solid #557BC9; outline-offset: -2px; }
+#leadsPage .comms-tabs .tab-badge { top: -2px; right: 0; min-width: 15px; height: 15px; border-radius: 4px; background: #C43B3B; font-size: 9px; line-height: 15px; }
+#leadsPage .comms { min-height: 0; background: #FFFFFF; }
+#leadsPage .ios-nav { min-height: 44px; height: 44px; background: #F7F8FB; border-bottom: 1px solid #E7EBF1; }
+#leadsPage .ios-title { color: #4A5261; font-size: 12px; font-weight: 650; }
+#leadsPage .ios-body { background: #FFFFFF; }
+#leadsPage .ios-row, #leadsPage .wa-row, #leadsPage .call-row { border-bottom-color: #EDF0F4; }
+#leadsPage .ios-row:hover, #leadsPage .wa-row:hover, #leadsPage .call-row:hover { background: #F8FAFD; }
+#leadsPage .ios-row.unread, #leadsPage .wa-row.unread { background: #FFFFFF; }
+#leadsPage .composer { border-top: 1px solid #E5E9F0; background: #FAFBFD; }
+
+/* Dialer: floating call console, preserving existing state machine, green LCD ink, and keyboard access. */
+
+/* Dialer idle row: wider console, reduced height, and every primary control on one line. */
+
+/* Topbar phone control: compact premium status pill after removing the work-scope switch. */
+.topbar-right { gap: 8px; }
+.phone-ctl {
+  height: 32px;
+  margin-right: 0;
+  border: 1px solid #D5DEED;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F9FD 100%);
+  box-shadow: 0 2px 8px rgba(39,55,84,.08);
+  overflow: hidden;
+}
+.phone-ctl button { min-height: 32px; color: #4D5B73; }
+.phone-ctl-open { gap: 6px; padding: 0 8px; border-radius: 9px 0 0 9px; }
+.phone-ctl-open:hover { background: #EEF5FF; color: #315EA8; }
+.phone-ctl-pick { gap: 6px; padding: 0 9px 0 8px; border-left-color: #E4EAF3 !important; border-radius: 0 9px 9px 0; font-size: 11px !important; font-weight: 650 !important; }
+.phone-ctl-pick:hover { background: #F3F7FD; color: #315EA8; }
+.phone-ctl-icon { width: 20px; height: 20px; align-items: center; justify-content: center; border-radius: 6px; background: #DDF6E6; color: #117A45; }
+.phone-ctl-icon .ic { width: 15px; height: 15px; }
+.phone-ctl-icon .dot { right: -2px; bottom: -2px; width: 6px; height: 6px; box-shadow: 0 0 0 2px #FFFFFF; }
+.phone-ctl-time { font-size: 10px; font-weight: 700; color: #168451; }
+#notifBtn { width: 40px; min-width: 40px; height: 40px; }
+#notifBtn > svg { width: 20px; height: 20px; stroke-width: 1.9; }
+
+/* Final page-level rhythm: 8px between major content surfaces. */
+#dashPage .db-head { display: flex !important; }
+#dashPage .db-stats,
+#dashPage .db-sections,
+#scanPage .sc-workspace,
+#scanPage .sc-intake,
+#scanPage .sc-output,
+#campPage .cp-builder,
+#campPage .cp-overview,
+#campPage .cp-board,
+#campPage .cp-audience,
+#logPage .al-overview,
+#logPage .al-days { gap: 8px; }
+
+/* Communications tab strip: keep the All/Messages/Calls/Email row compact. */
+#leadsPage .panel-comms > .comms-head {
+  height: 45px;
+  min-height: 45px;
+  padding: 0 8px;
+  align-items: center;
+}
+#leadsPage .comms-head .comms-tabs {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0;
+}
+#leadsPage .comms-head .comms-tabs .tab-btn {
+  height: 32px;
+  padding: 0 9px;
+  border-radius: 7px;
+  font-size: 11px;
+}
+#leadsPage .panel-comms > .comms-head > .panel-tools .icon-btn {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+}
+#leadsPage .panel-comms > .comms-head > .panel-tools { display: flex; align-items: center; height: 100%; }
+#leadsPage .panel-comms .ios-nav {
+  height: 28px;
+  min-height: 28px;
+  padding: 0 8px;
+  gap: 3px;
+}
+#leadsPage .panel-comms .ios-nav.wa { height: 30px; min-height: 30px; }
+#leadsPage .panel-comms .ios-title,
+#leadsPage .panel-comms .ios-back { font-size: 11px; }
+#leadsPage .panel-comms .ios-tools { gap: 2px; }
+#leadsPage .panel-comms .ios-icon { width: 22px; height: 22px; }
+
+/* Keep the center record surface flush to its 8px resizer gutters. */
+#leadsPage .panel-detail,
+#leadsPage .detail,
+#leadsPage .detail-body { padding-inline: 0; margin-inline: 0; }
+
+/* Scanner: intake and current output side by side; live Results always stay real and visible. */
+#scanPage.sc-page {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+  overflow: auto;
+  background: transparent;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+#scanPage[hidden] { display: none; }
+#scanPage .sc-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+}
+#scanPage .sc-intake {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+  align-items: stretch;
+}
+#scanPage .sc-source {
+  grid-column: 1;
+  min-height: 220px;
+  height: 100%;
+  align-self: stretch;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+#scanPage .sc-source.sc-compact { min-height: 48px; }
+#scanPage .sc-hit {
+  width: 100%;
+  min-height: 220px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+#scanPage .sc-hit-title { color: #0F172A; font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
+#scanPage .sc-hit-sub { color: #64748B; font-size: .8125rem; }
+#scanPage .sc-folder { bottom: 14px; color: #2563EB; font-size: .75rem; font-weight: 500; }
+#scanPage .sc-settings {
+  grid-column: 2;
+  min-height: 220px;
+  height: 100%;
+  align-self: stretch;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 16px 20px;
+  align-content: center;
+  min-width: 0;
+}
+#scanPage .sc-set {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  color: #475569;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+#scanPage .sc-set:nth-of-type(3) { grid-column: 1 / -1; }
+#scanPage .sc-set input, #scanPage .sc-set .sc-money-in {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  background: #F8FAFC;
+  color: #0F172A;
+  font-size: .8125rem;
+  text-align: left;
+  transition: border-color 150ms ease;
+}
+#scanPage .sc-set input:focus { border-color: #2563EB; outline: 2px solid rgba(37,99,235,.15); background: #FFFFFF; }
+#scanPage .sc-more { grid-column: 1 / -1; justify-self: end; }
+#scanPage .sc-more-trigger {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  background: #F8FAFC;
+  color: #475569;
+  font-size: .75rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+#scanPage .sc-more-trigger:hover { background: #F1F5F9; }
+#leadsPage .financial-pitch-card { background: #EAF0FF; }
+#leadsPage .info-pair > .section-card,
+#leadsPage .section-pair > .section-card { height: 100%; min-height: 0; align-self: stretch; }
+#dashPage .db-sections,
+#campPage .cp-board,
+#logPage .al-overview,
+#logPage .al-days { align-items: stretch; }
+#dashPage .db-sections > *,
+#campPage .cp-board > *,
+#logPage .al-overview > *,
+#logPage .al-days > * { align-self: stretch; }
+#scanPage .sc-output {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+#scanPage .sc-progress { padding: 12px 16px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; }
+#scanPage .sc-results {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 28rem;
+  overflow: hidden;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+}
+#scanPage .sc-head {
+  min-height: 48px;
+  height: 48px;
+  padding: 0 18px;
+  background: #FFFFFF;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+}
+#scanPage .sc-head .panel-title { color: #0F172A; font-size: .9375rem; font-weight: 600; letter-spacing: -.01em; }
+#scanPage .sc-grid-wrap { flex: 1; min-height: 0; background: #FFFFFF; }
+#scanPage .sg { font-size: .8125rem; }
+#scanPage .sg th { height: 40px; background: #F8FAFC; color: #475569; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+#scanPage .sg td { height: 42px; color: #1E293B; font-size: .8125rem; }
+#scanPage .sg .sc-grid-empty td { height: 140px; padding: 24px; background: #FFFFFF; color: #94A3B8; font-size: .875rem; text-align: center; white-space: normal; }
+#scanPage .sc-grid-wrap:focus-visible { outline: 2px solid #2563EB; outline-offset: -2px; }
+#scanPage .sc-audit { flex: 0 0 auto; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; }
+#scanPage .sc-audit-head { min-height: 44px; height: 44px; padding: 0 16px; border-radius: 8px; background: #FFFFFF; }
+#scanPage .sc-audit.open .sc-audit-head { border-radius: 8px 8px 0 0; }

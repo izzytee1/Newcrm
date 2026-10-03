@@ -1,0 +1,279 @@
+@font-face {
+  font-family: "Perfect DOS VGA 437";
+  src: local("Perfect DOS VGA 437 Win"), local("Perfect DOS VGA 437"), url("https://static.wfonts.com/data/2014/06/09/perfect-dos-vga-437/Perfect%20DOS%20VGA%20437%20Win.woff") format("woff");
+  font-display: swap;
+}
+
+/* Phone state colours shared by the topbar phone control and dialer. */
+[data-tone="live"] { --tone: var(--accent-active); }
+[data-tone="wait"] { --tone: var(--accent-amber); }
+[data-tone="off"]  { --tone: var(--text-muted); }
+
+/* Topbar phone control. */
+.phone-ctl {
+  display: flex;
+  height: 1.875rem;
+  margin-right: .875rem;
+  border: 1px solid var(--border);
+  border-radius: .5rem;
+  background: var(--bg-surface);
+}
+.phone-ctl button {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+  border: 0;
+  background: none;
+  color: var(--text-secondary);
+  font-size: calc(.75rem * var(--crm-font-scale, 1));
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.phone-ctl button:hover { background: var(--bg-row-hover); color: var(--text-primary); }
+.phone-ctl-open { padding: 0 .625rem; border-radius: .4375rem 0 0 .4375rem; }
+.phone-ctl-open[aria-expanded="true"] { background: var(--accent-blue-light); color: var(--accent-blue); }
+.phone-ctl .phone-ctl-pick { padding: 0 .625rem 0 .5625rem; border-left: 1px solid var(--border); border-radius: 0 .4375rem .4375rem 0; }
+.phone-ctl-icon { position: relative; display: flex; }
+.phone-ctl-icon .dot {
+  position: absolute;
+  right: -.25rem;
+  bottom: -.1875rem;
+  width: .4375rem;
+  height: .4375rem;
+  border-radius: 50%;
+  background: var(--tone);
+  box-shadow: 0 0 0 2px var(--bg-surface);
+}
+.phone-ctl[data-state="incoming"] .phone-ctl-open { color: var(--tone); }
+.phone-ctl-time { font-size: calc(.71875rem * var(--crm-font-scale, 1)); font-weight: 500; color: var(--accent-active); }
+.phone-ctl-time:empty { display: none; }
+
+/* CRM.front.4 dialer. */
+.dialer {
+  --d-line: rgba(255,255,255,.12);
+  --d-fill: rgba(255,255,255,.06);
+  --d-hover: rgba(255,255,255,.12);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 70;
+  width: min(27.5rem, calc(100vw - 1rem));
+  padding: .75rem .625rem .75rem .875rem;
+  border-radius: .75rem;
+  background: var(--bg-sidebar);
+  color: var(--text-sidebar);
+  box-shadow: var(--shadow-lg);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 200ms var(--ease), visibility 0s linear 200ms;
+}
+.dialer.open { opacity: 1; visibility: visible; transition: opacity 200ms var(--ease), visibility 0s; }
+.dialer:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.dialer.dragging, .dialer.dragging * { cursor: grabbing; }
+.dialer button { cursor: pointer; }
+
+.dialer-main { display: flex; align-items: center; gap: .5rem; }
+.dialer-ring {
+  position: relative;
+  width: 2.125rem;
+  height: 2.125rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tone);
+  transition: color .2s;
+}
+.dialer-who { flex: 1; min-width: 0; }
+.dialer-name { font-size: calc(.78125rem * var(--crm-font-scale, 1)); font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dialer-sub { display: flex; align-items: baseline; gap: .5rem; min-width: 0; margin-top: .0625rem; }
+.dialer-status { min-width: 0; font-size: calc(.6875rem * var(--crm-font-scale, 1)); color: var(--text-sidebar); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dialer-status.warn, .dialer[data-tone="wait"] .dialer-status { color: var(--accent-amber); }
+.dialer-timer {
+  font-family: "Perfect DOS VGA 437", monospace;
+  font-size: calc(.8125rem * var(--crm-font-scale, 1));
+  font-weight: 400;
+  color: #7BE37A;
+  font-variant-numeric: tabular-nums;
+  font-synthesis: none;
+  letter-spacing: .02em;
+  text-shadow: 0 0 3px rgba(123,227,122,.55);
+}
+.dialer-timer:empty { display: none; }
+
+.dial-keypad {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--d-line);
+  border-radius: .5rem;
+  background: var(--d-fill);
+  color: var(--text-sidebar);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.dial-keypad:hover { background: var(--d-hover); color: #fff; }
+.dial-keypad.active { border-color: var(--accent-blue); background: rgba(59,111,212,.35); color: #fff; }
+
+/* Perfect DOS VGA 437 LCD. Width keeps a formatted 10-digit number fully visible. */
+.dialer-input {
+  width: 9.75rem;
+  min-width: 9.75rem;
+  max-width: 9.75rem;
+  height: 2.125rem;
+  flex: 0 0 9.75rem;
+  padding: 0 .375rem;
+  border: 1px solid rgba(54,201,74,.34);
+  border-radius: .375rem;
+  background: #020803;
+  box-shadow: inset 0 0 .5rem rgba(0,0,0,.32), 0 0 .25rem rgba(53,201,74,.08);
+  color: #7BE37A;
+  -webkit-text-fill-color: #7BE37A;
+  font-family: "Perfect DOS VGA 437", monospace;
+  font-size: calc(1rem * var(--crm-font-scale, 1));
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  font-synthesis: none;
+  letter-spacing: 0;
+  word-spacing: -.25em;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 0 3px rgba(123,227,122,.7), 0 0 7px rgba(123,227,122,.22);
+  caret-color: #7BE37A;
+  cursor: text;
+  user-select: text;
+  touch-action: manipulation;
+  transition: background .15s, border-color .15s;
+}
+.dialer-input:focus { background: #020803; border-color: rgba(123,227,122,.72); outline: 2px solid rgba(123,227,122,.22); outline-offset: 1px; }
+.dialer-input:disabled, .dialer-input[readonly] { color: #7BE37A; -webkit-text-fill-color: #7BE37A; opacity: 1; }
+.dialer-input::placeholder { color: #1A8D20; -webkit-text-fill-color: #1A8D20; text-shadow: none; }
+.dialer[data-state="incoming"] :is(.dialer-input, .dial-keypad) { display: none; }
+
+/* Keep the newer circular primary action button. */
+.dial-circle {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #35C94A;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(53,201,74,.22);
+  transition: background .2s var(--ease), box-shadow .2s var(--ease), transform .1s;
+}
+.dial-circle:hover { background: #27B942; transform: scale(1.06); }
+.dial-circle:active { transform: scale(.95); }
+.dial-circle.end { background: #CF4A4A; box-shadow: 0 4px 12px rgba(207,74,74,.2); }
+.dial-circle.end:hover { background: #B93838; }
+.dial-circle .ic { transition: transform .25s var(--ease); }
+.dial-circle.end .ic { transform: rotate(135deg); }
+.dial-circle[hidden] { display: none; }
+
+.dialer-min {
+  display: none !important;
+}
+
+.dial-fold { display: grid; grid-template-rows: 0fr; opacity: 0; }
+.dial-fold.open { grid-template-rows: 1fr; opacity: 1; }
+.dial-fold > div { min-height: 0; overflow: hidden; }
+.dial-ctrls { display: flex; gap: .1875rem; margin-top: .3125rem; padding-top: .3125rem; border-top: 1px solid var(--d-line); }
+.dial-ctrl {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .0625rem;
+  padding: .0625rem 0;
+  border: 0;
+  border-radius: .5rem;
+  background: none;
+  color: var(--text-sidebar);
+  transition: background .12s, color .12s;
+}
+.dial-ctrl:hover { background: var(--d-fill); color: #fff; }
+.dial-icon {
+  width: 1.5rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--d-line);
+  border-radius: .5rem;
+  background: var(--d-fill);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.dial-ctrl.active { color: #fff; }
+.dial-ctrl.active .dial-icon { border-color: var(--accent-blue); background: rgba(59,111,212,.35); }
+.dial-ctrl-label { font-size: calc(.59375rem * var(--crm-font-scale, 1)); font-weight: 600; }
+
+.keypad {
+  position: absolute;
+  top: calc(100% + .375rem);
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 3.5rem);
+  gap: .375rem;
+  padding: .5rem;
+  border-radius: .75rem;
+  background: var(--bg-sidebar);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 160ms var(--ease), visibility 0s linear 160ms;
+}
+.keypad.up { top: auto; bottom: calc(100% + .375rem); }
+.keypad.open { opacity: 1; visibility: visible; transition: opacity 160ms var(--ease), visibility 0s; }
+.key-btn {
+  height: 2.125rem;
+  border: 1px solid var(--d-line);
+  border-radius: .5rem;
+  background: var(--d-fill);
+  color: #7BE37A;
+  font-family: "Perfect DOS VGA 437", monospace;
+  font-size: calc(.875rem * var(--crm-font-scale, 1));
+  font-weight: 400;
+  font-synthesis: none;
+  text-shadow: 0 0 3px rgba(123,227,122,.38);
+  user-select: none;
+  transition: background .1s, border-color .1s, color .1s;
+}
+.key-btn:hover { background: var(--d-hover); color: #8CF08B; }
+.key-btn:active { background: var(--accent-blue); border-color: var(--accent-blue); color: #A0F59F; }
+
+@keyframes pop-in { from { opacity: 0; scale: .6; } }
+@media (prefers-reduced-motion: no-preference) {
+  .dialer { translate: .75rem 0; transition: opacity 240ms var(--ease), translate 240ms var(--ease), visibility 0s linear 240ms; }
+  .dialer.open { translate: none; transition: opacity 240ms var(--ease), translate 240ms var(--ease), visibility 0s; }
+  .dial-fold { transition: grid-template-rows 240ms var(--ease), opacity 240ms var(--ease); }
+  .keypad { translate: 0 -.25rem; transition: opacity 160ms var(--ease), translate 160ms var(--ease), visibility 0s linear 160ms; }
+  .keypad.up { translate: 0 .25rem; }
+  .keypad.open { translate: none; transition: opacity 160ms var(--ease), translate 160ms var(--ease), visibility 0s; }
+  #declineBtn { animation: pop-in 180ms var(--ease); }
+  [data-state="incoming"] :is(.dialer-ring, .phone-ctl-icon)::after {
+    content: '';
+    position: absolute;
+    inset: -.1875rem;
+    border: 2px solid var(--tone);
+    border-radius: 50%;
+    animation: ring-pulse 1.4s var(--ease) infinite;
+  }
+}
+@media (max-width: 42rem) {
+  .dialer { width: calc(100vw - 1rem); max-width: calc(100vw - 1rem); padding-inline: .625rem; }
+  .dialer-main { gap: .375rem; }
+  .dialer-who { min-width: 0; }
+  .dialer-input { flex: 1 1 10.5rem; min-width: 10.5rem; width: 10.5rem; max-width: 10.5rem; }
+  .dial-circle { width: 2rem; height: 2rem; }
+}
+html.still :is(.dialer, .dial-fold, .keypad) { transition: none; }
