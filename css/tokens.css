@@ -91,3 +91,17 @@ html.tabbing :is(input, textarea, select, [contenteditable="true"]):focus { outl
   .app { min-width: max-content; min-height: 100dvh; height: auto; overflow: visible; }
   .body-area { min-width: max-content; overflow: visible; }
 }
+
+/* Universal Page and Element Hidden State */
+[hidden] {
+  display: none !important;
+}
+#leadsPage[hidden],
+#mailPage[hidden],
+#dashPage[hidden],
+#scanPage[hidden],
+#campPage[hidden],
+#logPage[hidden] {
+  display: none !important;
+}
+

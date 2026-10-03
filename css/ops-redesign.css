@@ -14,6 +14,16 @@
   --ops-shadow: 0 2px 8px rgba(31, 43, 64, .045);
 }
 
+[hidden],
+#dashPage[hidden],
+#campPage[hidden],
+#logPage[hidden],
+#scanPage[hidden],
+#mailPage[hidden],
+#leadsPage[hidden] {
+  display: none !important;
+}
+
 /* ── Dashboard ─────────────────────────────────────────────────────────── */
 #dashPage.db-page {
   display: flex;
