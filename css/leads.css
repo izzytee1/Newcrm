@@ -172,13 +172,13 @@
 /* Panel 3 · communications (iPhone style) */
 .comms-tabs { gap: 8px; padding: 0 8px; justify-content: stretch; }
 .tab-btn {
-  position: relative; display: flex; align-items: center; justify-content: center; flex: 1; height: 1.75rem; padding: 0 8px; border: none; border-radius: 8px;
-  background: none; color: var(--text-secondary); font-size: calc(.75rem * var(--crm-font-scale, 1)); font-weight: 600; cursor: pointer; transition: color .12s;
+  position: relative; display: flex; align-items: center; justify-content: center; flex: 1; height: 1.75rem; padding: 0 8px; border: none; border-radius: 6px;
+  background: none; color: #64748B; font-size: calc(.75rem * var(--crm-font-scale, 1)); font-weight: 500; cursor: pointer; transition: color .12s, background .12s;
 }
 .comms-tabs .tab-btn > .ic { width: .9375rem; height: .9375rem; }
 .comms-tabs .panel-tools { gap: .75rem; margin-left: auto; }
-.tab-btn:hover { color: var(--text-primary); background: none; }
-.tab-btn.active { color: var(--accent-blue); background: none; }
+.tab-btn:hover { color: #0F172A; background: #F8FAFC; }
+.tab-btn.active { color: #0F172A; background: #F1F5F9; font-weight: 600; box-shadow: none; border-bottom: 0; }
 .tab-badge {
   position: absolute; top: 0; right: .125rem; min-width: .9375rem; height: .9375rem; padding: 0 .25rem; border-radius: .25rem; background: #FF3B30; color: #fff;
   font-size: calc(.5625rem * var(--crm-font-scale, 1)); font-style: normal; font-weight: 700; line-height: .9375rem; text-align: center;

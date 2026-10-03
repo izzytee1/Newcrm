@@ -82,7 +82,52 @@
   color: #0F172A;
   box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
 }
-#leadsPage .detail-title { min-width: 0; }
+#leadsPage .detail-name-row { display: flex; align-items: center; gap: 8px; }
+#leadsPage .detail-stage-badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  color: #1D4ED8;
+  font-size: .6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1.2;
+}
+#leadsPage .detail-person { display: inline-flex; align-items: center; gap: 4px; color: #334155; font-weight: 600; }
+#leadsPage .detail-card {
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05) !important;
+  padding: 16px 18px !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+#leadsPage .detail-card-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 7px !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid #F1F5F9 !important;
+  background: transparent !important;
+}
+#leadsPage .detail-card-head.notes-toggle { cursor: pointer; user-select: none; }
+#leadsPage .detail-card-icon { width: 14px; height: 14px; color: #64748B; flex-shrink: 0; }
+#leadsPage .detail-card-title {
+  color: #475569 !important;
+  font-size: .6875rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .05em !important;
+  text-transform: uppercase !important;
+}
 #leadsPage .detail-name {
   color: #0F172A;
   font-size: 1.125rem;

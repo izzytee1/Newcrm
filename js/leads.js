@@ -311,9 +311,12 @@ function renderDetail() {
   $('detail').innerHTML = `
     <div class="detail-head">
       <div class="detail-title">
-        <div class="detail-name">${esc(l.legal || l.company)}</div>
+        <div class="detail-name-row">
+          <div class="detail-name">${esc(l.legal || l.company)}</div>
+          <span class="detail-stage-badge">${esc(l.stage || 'prospecting')}</span>
+        </div>
         <div class="detail-sub">
-          <span>${esc(fullName(l))}</span>
+          <span class="detail-person"><svg class="ic" width="12" height="12"><use href="#i-user"/></svg><span>${esc(fullName(l))}</span></span>
           ${l.address ? `<button class="detail-addr" data-pop="address" data-value="${esc(l.address)}" title="Map or copy">${ic('pin', 12)}<span>${esc(l.address)}</span></button>` : ''}
           ${zoneOf(l.address) ? `<span class="detail-time" title="Their local time">${ic('clock', 11)}<span data-zone="${zoneOf(l.address)}"></span> local</span>` : ''}
         </div>
@@ -322,42 +325,43 @@ function renderDetail() {
     </div>
     <div class="detail-body">
       <div class="info-pair">
-      <div class="section section-card company-info-section">
-        <div class="section-title"><svg class="section-title-icon ic" aria-hidden="true" width="0.875rem" height="0.875rem"><use href="#i-layers"/></svg><span>Company</span></div>
-        <div class="facts">
-          ${l.dba ? fact('DBA', l.dba, { copy: l.dba }) : ''}
-          ${fact('EIN', l.ein, { mono: true, copy: l.ein })}
-          ${fact('Birth date', l.dob && `${fmtDate(l.dob)} · age ${yearsSince(l.dob)}`)}
-          ${fact('SSN', l.ssn, { mono: true, copy: l.ssn })}
-          ${fact('Start date', l.started && `${fmtDate(l.started)} · ${years < 1 ? 'under 1 yr' : years + (years === 1 ? ' yr' : ' yrs')}`)}
-          ${fact('Industry', l.industry)}
-          ${fact('Applied', l.applied && fmtDate(l.applied))}
-          ${l.address2 ? fact('Address 2', l.address2, { wide: true, copy: l.address2 }) : ''}
-          ${l.address3 ? fact('Address 3', l.address3, { wide: true, copy: l.address3 }) : ''}
+        <div class="detail-card section company-info-section">
+          <div class="detail-card-head"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-layers"/></svg><span class="detail-card-title">Company Profile</span></div>
+          <div class="facts">
+            ${l.dba ? fact('DBA', l.dba, { copy: l.dba }) : ''}
+            ${fact('EIN', l.ein, { mono: true, copy: l.ein })}
+            ${fact('Birth date', l.dob && `${fmtDate(l.dob)} · age ${yearsSince(l.dob)}`)}
+            ${fact('SSN', l.ssn, { mono: true, copy: l.ssn })}
+            ${fact('Start date', l.started && `${fmtDate(l.started)} · ${years < 1 ? 'under 1 yr' : years + (years === 1 ? ' yr' : ' yrs')}`)}
+            ${fact('Industry', l.industry)}
+            ${fact('Applied', l.applied && fmtDate(l.applied))}
+            ${l.address2 ? fact('Address 2', l.address2, { wide: true, copy: l.address2 }) : ''}
+            ${l.address3 ? fact('Address 3', l.address3, { wide: true, copy: l.address3 }) : ''}
+          </div>
+        </div>
+        <div class="detail-card section contact-info-section">
+          <div class="detail-card-head"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-contacts"/></svg><span class="detail-card-title">Direct Contacts</span></div>
+          <div class="contact-facts">${contactRows}</div>
         </div>
       </div>
-      <div class="section section-card contact-info-section">
-        <div class="section-title"><svg class="section-title-icon ic" aria-hidden="true" width="0.875rem" height="0.875rem"><use href="#i-contacts"/></svg><span>Contacts</span></div>
-        <div class="contact-facts">${contactRows}</div>
-      </div>
-      </div>
-      <div class="section section-pair">
-        <div class="section-card">
-          <div class="section-title"><svg class="section-title-icon ic" aria-hidden="true" width="0.875rem" height="0.875rem"><use href="#i-file"/></svg><span>Banking</span></div>
+      <div class="section-pair">
+        <div class="detail-card section banking-info-section">
+          <div class="detail-card-head"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-file"/></svg><span class="detail-card-title">Banking & Cash Flow</span></div>
           ${b ? `<div class="facts">${fact('Bank', b.name)}${fact('Account #', b.account, { mono: true, copy: b.account })}</div><table class="stmt" id="stmts"></table>`
             : '<div class="empty">No bank statements on file.</div>'}
         </div>
-        <div class="section-card">
-          <div class="section-title"><svg class="section-title-icon ic" aria-hidden="true" width="0.875rem" height="0.875rem"><use href="#i-clock"/></svg><span>Activity</span></div>
+        <div class="detail-card section activity-info-section">
+          <div class="detail-card-head"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-clock"/></svg><span class="detail-card-title">Activity Stream</span></div>
           <div id="feed"></div>
         </div>
       </div>
-      ${b ? `<div class="section section-card financial-pitch-card">
+      ${b ? `<div class="detail-card section financial-pitch-card">
+        <div class="detail-card-head"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-outgoing"/></svg><span class="detail-card-title">Executive Summary</span></div>
         <p class="summary">${esc(buildSummary(l))}</p>
       </div>` : ''}
-      <div class="section section-card notes-section" id="notesSection">
-        <button class="section-title notes-toggle" type="button" id="notesToggle"><svg class="section-title-icon ic" aria-hidden="true" width="0.875rem" height="0.875rem"><use href="#i-note"/></svg><span>Notes</span><span class="save-state" id="noteState"></span></button>
-        <textarea class="notes-textarea" id="notesText" data-lead="${l.id}" rows="4" placeholder="Add a note… it saves by itself">${esc(notes)}</textarea>
+      <div class="detail-card section notes-section" id="notesSection">
+        <div class="detail-card-head notes-toggle" id="notesToggle"><svg class="detail-card-icon ic" aria-hidden="true" width="13" height="13"><use href="#i-note"/></svg><span class="detail-card-title">Notes & Directives</span><span class="save-state" id="noteState"></span></div>
+        <textarea class="notes-textarea" id="notesText" data-lead="${l.id}" rows="4" placeholder="Add a note… it saves automatically">${esc(notes)}</textarea>
       </div>
     </div>`;
   renderActs();
