@@ -30,7 +30,89 @@ const scanner = (() => {
   const settings = { regularPages: 10, ocrPages: 2, minimumRevenue: 40000 };
   const freshUpload = () => ({ status: 'idle', sourceType: '', sourceName: '', filesPrepared: 0, filesTotal: 0, phaseText: '' });
   const freshProgress = () => ({ completed: 0, total: 0, regularScanned: 0, skipped: 0, ocrNeeded: 0, failed: 0, elapsed: 0, eta: null, progress: null, activeLanes: [] });
-  const state = { batchId: '', upload: freshUpload(), progress: freshProgress(), rows: new Map(), rescan: [], audit: [], history: [] };
+  const sampleDemoRows = [
+    {
+      id: 'demo-1',
+      company: 'QuantumBridge Technologies Inc.',
+      companyAlt: '',
+      dba: 'QuantumBridge AI',
+      owner: 'David Ruiz',
+      ownerAlt: '',
+      revenue: 450000,
+      statements: [
+        { period: 'SEP', deposits: 448200, balance: 64200 },
+        { period: 'AUG', deposits: 432500, balance: 51800 },
+        { period: 'MTD', deposits: 145000, balance: 72400 }
+      ],
+      phones: ['6463371122', '2125550198'],
+      emails: ['d.ruiz@qbridge.ai', 'assistant@qbridge.ai'],
+      dob: '1979-12-14',
+      appDate: '2026-09-28',
+      businessAddress: '120 W 45th St, New York, NY 10036',
+      applicationAddress: '120 W 45th St, New York, NY 10036',
+      ein: '47-3829104',
+      bank: 'JPMorgan Chase',
+      account: '****4928',
+      mca: [
+        { company: 'RapidFinance', payment: 1250, frequency: 'Daily', monthlyTotal: 27500 }
+      ],
+      dailyCashFlow: 14940
+    },
+    {
+      id: 'demo-2',
+      company: 'Meridian Health Partners',
+      companyAlt: '',
+      dba: 'Meridian Care',
+      owner: 'James Liao',
+      ownerAlt: '',
+      revenue: 185000,
+      statements: [
+        { period: 'SEP', deposits: 184500, balance: 28400 },
+        { period: 'AUG', deposits: 191200, balance: 31200 },
+        { period: 'MTD', deposits: 62000, balance: 33800 }
+      ],
+      phones: ['3125550144'],
+      emails: ['jliao@meridianhealth.org'],
+      dob: '1984-06-22',
+      appDate: '2026-09-29',
+      businessAddress: '401 N Michigan Ave, Chicago, IL 60611',
+      applicationAddress: '401 N Michigan Ave, Chicago, IL 60611',
+      ein: '36-9281745',
+      bank: 'Bank of America',
+      account: '****7102',
+      mca: [],
+      dailyCashFlow: 6160
+    },
+    {
+      id: 'demo-3',
+      company: 'Apex Industrial Supply LLC',
+      companyAlt: '',
+      dba: '',
+      owner: 'Sarah Jenkins',
+      ownerAlt: '',
+      revenue: 290000,
+      statements: [
+        { period: 'SEP', deposits: 288000, balance: 41900 },
+        { period: 'AUG', deposits: 295000, balance: 38200 },
+        { period: 'MTD', deposits: 98000, balance: 44100 }
+      ],
+      phones: ['7135550189'],
+      emails: ['s.jenkins@apexsupply.com'],
+      dob: '1975-03-18',
+      appDate: '2026-09-30',
+      businessAddress: '1500 Post Oak Blvd, Houston, TX 77056',
+      applicationAddress: '1500 Post Oak Blvd, Houston, TX 77056',
+      ein: '74-1829401',
+      bank: 'Wells Fargo',
+      account: '****8841',
+      mca: [
+        { company: 'OnDeck', payment: 820, frequency: 'Daily', monthlyTotal: 18040 }
+      ],
+      dailyCashFlow: 9660
+    }
+  ];
+  const initialRowsMap = new Map(sampleDemoRows.map(r => [r.id, r]));
+  const state = { batchId: '104', upload: freshUpload(), progress: freshProgress(), rows: initialRowsMap, rescan: [], audit: [], history: [] };
   const view = {
     reading: false, auditOpen: false, issuesOnly: false, sort: { key: 'document', dir: 1 },
     compact: false, wrap: false, numbers: true, freeze: true, menu: '', dialog: '', picks: new Map(), dialogNote: '', historyQuery: '',
