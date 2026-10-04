@@ -497,16 +497,16 @@
   align-items: stretch !important;
 }
 
-/* Premium Dashed Drop Surface - Auto-starts scanner on click or drag */
+/* Premium Dashed Drop Surface - Universal blue dash with rich color inside */
 #scanPage .sc-source {
   height: 200px !important;
   min-height: 200px !important;
   max-height: 200px !important;
   align-self: stretch !important;
-  border: 2px dashed #94A3B8 !important;
+  border: 2px dashed #2563EB !important;
   border-radius: 12px !important;
-  background: #FFFFFF !important;
-  box-shadow: none !important;
+  background: linear-gradient(180deg, #F0F6FF 0%, #E8F2FE 100%) !important;
+  box-shadow: inset 0 1px 3px rgba(37, 99, 235, 0.08) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -516,14 +516,15 @@
   overflow: hidden !important;
   cursor: pointer !important;
   text-align: center !important;
-  transition: border-color .15s ease, background-color .15s ease !important;
+  transition: all .15s ease !important;
   box-sizing: border-box !important;
 }
 
 #scanPage .sc-source:hover,
 #scanPage .sc-source.sc-over {
-  border-color: #2563EB !important;
-  background: #F8FAFC !important;
+  border-color: #1D4ED8 !important;
+  background: linear-gradient(180deg, #E5EFFF 0%, #DCEDFE 100%) !important;
+  box-shadow: inset 0 1px 4px rgba(29, 78, 216, 0.12), 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
 }
 
 #scanPage .sc-dash-surface {
@@ -538,36 +539,45 @@
 }
 
 #scanPage .sc-dash-icon {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #EFF6FF;
+  background: #DBEAFE;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 2px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(191, 219, 254, 0.8);
 }
 
 #scanPage .sc-dash-title {
-  color: #0F172A;
-  font-size: 0.875rem;
-  font-weight: 700;
+  color: #1E3A8A;
+  font-size: 0.9375rem;
+  font-weight: 750;
   letter-spacing: -0.01em;
 }
 
 #scanPage .sc-dash-sub {
-  color: #64748B;
+  color: #2563EB;
   font-size: 0.75rem;
+  font-weight: 500;
   line-height: 1.35;
   max-width: 260px;
 }
 
 #scanPage .sc-dash-hint,
-#scanPage .sc-dash-tip {
-  color: #2563EB;
+#scanPage .sc-dash-tip,
+#scanPage .sc-dash-badge {
+  color: #1D4ED8;
   font-size: 0.71875rem;
-  font-weight: 600;
-  margin-top: 2px;
+  font-weight: 650;
+  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 12px;
+  border-radius: 20px;
+  border: 1px solid #BFDBFE;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.06);
 }
 
 #scanPage .sc-ctrls-clean {
@@ -926,3 +936,69 @@ button.btn.danger {
   text-decoration: underline !important;
   text-underline-offset: 3px !important;
 }
+
+/* ── UNIFORM CRM-WIDE 8PX GAPS FOR MIDDLE PANEL & WORKSPACE ── */
+#leadsPage.workspace {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+#leadsPage .resizer {
+  display: none !important;
+  width: 0 !important;
+  flex: 0 0 0 !important;
+  margin: 0 !important;
+}
+
+#leadsPage .panel-detail,
+.panel-detail {
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#leadsPage .detail,
+.detail {
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#leadsPage .detail-head,
+.detail-head {
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+#leadsPage .detail-body,
+.detail-body {
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#leadsPage .info-pair,
+#leadsPage .section-pair,
+.info-pair,
+.section-pair {
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+#leadsPage .detail-card,
+#leadsPage .section-card,
+.section-card {
+  margin: 0 !important;
+}
+
+#leadsPage .financial-pitch-card,
+#leadsPage .notes-section {
+  margin: 0 !important;
+}
+
