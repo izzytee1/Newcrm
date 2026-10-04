@@ -172,25 +172,31 @@
 #leadsPage .detail-addr .ic,
 #leadsPage .detail-time { color: #94A3B8; }
 #leadsPage .detail-time { display: inline-flex; align-items: center; gap: 4px; }
-#leadsPage .acts { display: flex; align-items: center; gap: 6px; }
+#leadsPage .acts { display: flex; align-items: center; gap: 8px; }
 #leadsPage .act-btn {
-  width: 34px;
-  min-width: 34px;
-  height: 34px;
-  border: 1px solid transparent;
-  border-radius: 6px;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   cursor: pointer;
-  transition: transform .1s, opacity .1s;
+  transition: opacity .12s, transform .1s;
 }
-#leadsPage .act-btn:hover { transform: translateY(-1px); opacity: .92; }
-#leadsPage .act-btn.call { background: #16A34A; color: #FFFFFF; }
-#leadsPage .act-btn.sms { background: #2563EB; color: #FFFFFF; }
-#leadsPage .act-btn.wa { background: #0D9488; color: #FFFFFF; }
-#leadsPage .act-btn.email { background: #7C3AED; color: #FFFFFF; }
+#leadsPage .act-btn:hover { opacity: .75; transform: scale(1.06); background: transparent !important; box-shadow: none !important; }
+#leadsPage .act-btn.call { color: #16A34A; background: transparent !important; }
+#leadsPage .act-btn.call svg, #leadsPage .act-btn.call .ic { color: #16A34A; stroke: #16A34A; }
+#leadsPage .act-btn.sms { color: #2563EB; background: transparent !important; }
+#leadsPage .act-btn.sms svg, #leadsPage .act-btn.sms .ic { color: #2563EB; stroke: #2563EB; }
+#leadsPage .act-btn.wa { color: #0D9488; background: transparent !important; }
+#leadsPage .act-btn.wa svg, #leadsPage .act-btn.wa .ic { color: #0D9488; stroke: #0D9488; }
+#leadsPage .act-btn.email { color: #7C3AED; background: transparent !important; }
+#leadsPage .act-btn.email svg, #leadsPage .act-btn.email .ic { color: #7C3AED; stroke: #7C3AED; }
 
 #leadsPage .detail-body {
   display: flex;
@@ -481,205 +487,177 @@
   width: 100%;
 }
 
-/* Modern responsive intake layout */
+/* Modern 50/50 side-by-side scanner intake layout */
 #scanPage .sc-intake {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: 8px;
-  min-width: 0;
-  width: 100%;
-  align-items: stretch;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  align-items: stretch !important;
 }
 
-@media (max-width: 900px) {
-  #scanPage .sc-intake {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Redesigned Drop Surface */
+/* Premium Dashed Drop Surface - Auto-starts scanner on click or drag */
 #scanPage .sc-source {
-  min-height: 200px;
-  height: 100%;
-  align-self: stretch;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
-  background: #FFFFFF;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  transition: all 150ms ease;
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+  align-self: stretch !important;
+  border: 2px dashed #94A3B8 !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px 14px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+  text-align: center !important;
+  transition: border-color .15s ease, background-color .15s ease !important;
+  box-sizing: border-box !important;
 }
 
-#scanPage .sc-source:hover {
-  border-color: #3B82F6;
-  background: #FAFCFF;
-}
-
+#scanPage .sc-source:hover,
 #scanPage .sc-source.sc-over {
-  border-color: #2563EB;
-  background: #EFF6FF;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  border-color: #2563EB !important;
+  background: #F8FAFC !important;
 }
 
-#scanPage .sc-source.sc-compact {
-  min-height: 48px;
-  padding: 0;
-  border-radius: 10px;
-}
-
-#scanPage .sc-hit {
+#scanPage .sc-dash-surface {
   width: 100%;
-  min-height: 200px;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 24px 20px 38px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
+  gap: 6px;
+  pointer-events: none;
 }
 
-#scanPage .sc-hit svg.mi,
-#scanPage .sc-hit svg {
-  width: 32px;
-  height: 32px;
-  color: #2563EB;
+#scanPage .sc-dash-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   background: #EFF6FF;
-  padding: 8px;
-  border-radius: 10px;
-  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 2px;
 }
 
-#scanPage .sc-hit-title {
+#scanPage .sc-dash-title {
   color: #0F172A;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  text-align: center;
 }
 
-#scanPage .sc-hit-sub {
+#scanPage .sc-dash-sub {
   color: #64748B;
-  font-size: 0.78125rem;
-  text-align: center;
-  max-width: 320px;
-  line-height: 1.4;
-}
-
-#scanPage .sc-folder {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border: 1px solid #CBD5E1;
-  border-radius: 6px;
-  background: #F8FAFC;
-  color: #2563EB;
   font-size: 0.75rem;
+  line-height: 1.35;
+  max-width: 260px;
+}
+
+#scanPage .sc-dash-hint,
+#scanPage .sc-dash-tip {
+  color: #2563EB;
+  font-size: 0.71875rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 120ms ease;
-  white-space: nowrap;
+  margin-top: 2px;
 }
 
-#scanPage .sc-folder:hover {
-  background: #EFF6FF;
-  border-color: #2563EB;
+#scanPage .sc-ctrls-clean {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  pointer-events: auto;
 }
 
-/* Redesigned Settings Panel */
+/* Matching Settings Box (50/50 exact same size) */
 #scanPage .sc-settings {
-  min-height: 200px;
-  height: 100%;
-  align-self: stretch;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
-  background: #FFFFFF;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 10px;
-  padding: 18px 20px;
-  align-content: center;
-  min-width: 0;
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+  align-self: stretch !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  background: #FFFFFF !important;
+  box-shadow: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 14px 16px !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 #scanPage .sc-set {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
   color: #334155;
-  font-size: 0.75rem;
+  font-size: 0.78125rem;
   font-weight: 600;
   letter-spacing: 0.01em;
 }
 
-#scanPage .sc-set:nth-of-type(3) {
-  grid-column: 1 / -1;
-}
-
 #scanPage .sc-set input,
 #scanPage .sc-set .sc-money-in {
-  width: 100%;
-  height: 36px;
-  padding: 0 12px;
-  border: 1px solid #CBD5E1;
-  border-radius: 6px;
-  background: #F8FAFC;
-  color: #0F172A;
-  font-size: 0.8125rem;
-  font-weight: 500;
-  text-align: left;
-  transition: all 120ms ease;
+  width: 84px !important;
+  height: 32px !important;
+  padding: 0 8px !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 6px !important;
+  background: #F8FAFC !important;
+  color: #0F172A !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  text-align: right !important;
+  transition: border-color 120ms ease, background-color 120ms ease !important;
+}
+
+#scanPage .sc-set:nth-of-type(3) input {
+  width: 96px !important;
 }
 
 #scanPage .sc-set input:focus,
 #scanPage .sc-set .sc-money-in:focus {
-  border-color: #2563EB;
-  background: #FFFFFF;
-  outline: 2px solid rgba(37, 99, 235, 0.15);
+  border-color: #2563EB !important;
+  background: #FFFFFF !important;
+  outline: 2px solid rgba(37, 99, 235, 0.15) !important;
 }
 
 #scanPage .sc-more {
-  grid-column: 1 / -1;
-  justify-self: end;
+  display: flex;
+  justify-content: flex-end;
   position: relative;
 }
 
 #scanPage .sc-more-trigger {
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid #CBD5E1;
-  border-radius: 6px;
-  background: #F8FAFC;
-  color: #475569;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 120ms ease;
+  color: #2563EB !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 0 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
 }
 
 #scanPage .sc-more-trigger:hover {
-  background: #F1F5F9;
-  color: #0F172A;
-  border-color: #94A3B8;
+  color: #1D4ED8 !important;
+  text-decoration: underline !important;
 }
 
 /* Redesigned Results Panel */
@@ -799,60 +777,152 @@
   border-radius: 12px 12px 0 0;
 }
 
-#scanPage .sc-header-strip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 18px;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+/* ── REMOVE BOX BUTTON SHAPES ACROSS MIDDLE PANEL, SCANNER & OTHER PAGES ── */
+/* Keep text and icons, eliminate box background, box border, and box shadow */
+
+/* 1. Global Buttons */
+.btn,
+button.btn,
+.icon-btn,
+.link-btn {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #2563EB !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: opacity .12s, color .12s !important;
 }
-#scanPage .sc-header-title {
-  color: #0F172A;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0;
+
+.btn:hover,
+button.btn:hover,
+.icon-btn:hover,
+.link-btn:hover {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  opacity: .8 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
 }
-#scanPage .sc-header-desc {
-  color: #64748B;
-  font-size: 0.75rem;
-  margin: 2px 0 0;
+
+.btn.primary,
+button.btn.primary {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #2563EB !important;
+  font-weight: 700 !important;
 }
-#scanPage .sc-header-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+
+.btn.danger,
+button.btn.danger {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #EF4444 !important;
+  font-weight: 600 !important;
 }
-#scanPage .sc-live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background: #F0FDF4;
-  border: 1px solid #BBF7D0;
-  color: #166534;
-  font-size: 0.6875rem;
-  font-weight: 650;
+
+/* 2. Middle Panel (Lead Detail & Pipeline) */
+#leadsPage .act-btn,
+.act-btn {
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  padding: 4px 6px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
-#scanPage .sc-live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #22C55E;
+
+#leadsPage .act-btn:hover,
+.act-btn:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: .75 !important;
+  transform: scale(1.08) !important;
 }
-#scanPage .sc-live-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: #EFF6FF;
-  border: 1px solid #DBEAFE;
-  color: #1D4ED8;
-  font-size: 0.6875rem;
-  font-weight: 650;
+
+#leadsPage .detail-addr,
+.detail-addr {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+#leadsPage .panel-tools button,
+#leadsPage .lead-options-trigger,
+#leadsPage #addLeadBtn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* 3. Scanner Page Actions */
+#scanPage button,
+#scanPage .btn,
+#scanPage [data-act="xlsx"],
+#scanPage .sc-ctrls button,
+#scanPage .link-action,
+#scanPage .sc-more-item,
+#scanPage .sc-audit-tools button {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  transition: opacity .12s, color .12s !important;
+}
+
+#scanPage [data-act="xlsx"] {
+  color: #2563EB !important;
+  font-weight: 700 !important;
+  padding: 4px 6px !important;
+}
+
+#scanPage [data-act="xlsx"]:hover,
+#scanPage .link-action:hover {
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+#scanPage .link-action {
+  color: #2563EB !important;
+  font-size: 0.75rem !important;
+  padding: 2px 4px !important;
+}
+
+#scanPage .link-action.danger {
+  color: #EF4444 !important;
+}
+
+/* 4. Campaign & Other Workspace Buttons */
+#campPage .btn,
+#campPage .cp-select,
+#campPage .cp-counts button,
+#campPage .cp-more-item,
+#logPage .btn,
+#dashPage .btn {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+
+#campPage .cp-counts button[aria-pressed="true"] {
+  background: transparent !important;
+  color: #2563EB !important;
+  font-weight: 700 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
 }

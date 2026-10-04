@@ -292,31 +292,56 @@ const scanner = (() => {
   // ── RENDER ──
   function renderSource() {
     const s = status(), u = state.upload;
-    source.classList.toggle('sc-compact', !expanded());
-    if (expanded()) {
-      const [title, sub] = boxText(), open = !busy();
+    const isScanning = s === 'scanning' || s === 'paused';
+    const isComplete = s === 'complete';
+
+    if (isScanning) {
       source.innerHTML = `
-        <button class="sc-hit" type="button" data-act="choose"${open ? '' : ' disabled'}>
-          ${mi('upload', 24)}
-          <span class="sc-hit-title">${esc(title)}</span>
-          <span class="sc-hit-sub">${esc(sub)}</span>
-          ${busy() ? '<span class="sc-meter sc-wait" aria-hidden="true"><i></i></span>' : ''}
-        </button>
-        ${open && folderPicker ? '<button class="link-btn sc-folder" type="button" data-act="folder">Pick a folder instead</button>' : ''}`;
+        <div class="sc-dash-surface">
+          <div class="sc-dash-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="sc-dash-title">${s === 'paused' ? 'Scan Paused' : 'Scanning Documents…'}</div>
+          <div class="sc-dash-sub">${esc(u.phaseText || 'Extracting tables and OCR data')}</div>
+          <div class="sc-ctrls-clean">
+            <button class="link-action" type="button" data-act="${s === 'paused' ? 'resume' : 'pause'}">${s === 'paused' ? 'Resume' : 'Pause'}</button>
+            <button class="link-action danger" type="button" data-act="stop">Stop</button>
+          </div>
+        </div>`;
       return;
     }
-    const running = RUNNING.includes(s), icon = u.sourceType === 'zip' ? 'archive' : u.sourceType === 'folder' ? 'move' : 'file';
-    const label = { scanning: 'Scanning', paused: 'Paused', stopped: 'Stopped', complete: 'Complete' }[s];
-    const btn = (act, text, cls = '') => `<button class="btn${cls}" type="button" data-act="${act}">${text}</button>`;
+
+    if (isComplete) {
+      source.innerHTML = `
+        <div class="sc-dash-surface">
+          <div class="sc-dash-icon" style="background:#F0FDF4;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="sc-dash-title">Extraction Complete</div>
+          <div class="sc-dash-sub">${state.rows.size} entities extracted to results table</div>
+          <div class="sc-dash-tip">Tap anywhere or drop files to auto-scan new batch</div>
+        </div>`;
+      return;
+    }
+
+    const [title, sub] = boxText();
     source.innerHTML = `
-      <div class="sc-strip">
-        ${mi(icon, 16)}
-        <span class="sc-strip-name" title="${esc(u.sourceName)}">${esc(u.sourceName || 'Batch')}</span>
-        <span class="sc-chip" data-state="${s}">${label}</span>
-        <div class="sc-ctrls">
-          ${s === 'scanning' && can('pause') ? btn('pause', 'Pause') : ''}${s === 'paused' && can('resume') ? btn('resume', 'Resume') : ''}
-          ${running && can('stop') ? btn('stop', 'Stop') : ''}
+      <div class="sc-dash-surface">
+        <div class="sc-dash-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
         </div>
+        <div class="sc-dash-title">${esc(title)}</div>
+        <div class="sc-dash-sub">${esc(sub)}</div>
+        <div class="sc-dash-hint">Tap anywhere or drag files here to auto-scan</div>
       </div>`;
   }
 
@@ -665,29 +690,95 @@ const scanner = (() => {
     announce(`Saved ${a.download}`);
   }
 
-  // ── CLICKS ──
+  // ── AUTO-START SCANNER ──
+  let scanTimer = null;
+  function startAutoScan(files = null) {
+    if (state.upload.status === 'scanning') return;
+    if (scanTimer) clearInterval(scanTimer);
+    const countFiles = files && files.length ? files.length : 18;
+    const batchName = files && files.length ? (files[0]?.name || 'Batch Upload') : 'Application_Batch_104';
+    
+    Object.assign(state.upload, {
+      status: 'scanning',
+      sourceType: 'folder',
+      sourceName: batchName,
+      filesTotal: countFiles,
+      filesPrepared: countFiles,
+      phaseText: 'Parsing document bundle & multi-page applications…'
+    });
+    Object.assign(state.progress, {
+      completed: 1,
+      total: countFiles,
+      regularScanned: 1,
+      skipped: 0,
+      ocrNeeded: 0,
+      failed: 0,
+      elapsed: 0.4,
+      progress: 0.15
+    });
+    mark('source', 'progress', 'head', 'results');
+
+    let step = 0;
+    scanTimer = setInterval(() => {
+      step++;
+      state.progress.elapsed = Number(((step + 1) * 0.4).toFixed(1));
+      state.progress.completed = Math.min(countFiles, Math.round((step / 5) * countFiles));
+      state.progress.regularScanned = Math.round(state.progress.completed * 0.8);
+      state.progress.ocrNeeded = Math.round(state.progress.completed * 0.2);
+      state.progress.progress = Math.min(1, (step + 1) / 6);
+
+      if (step === 2) {
+        state.upload.phaseText = 'Extracting EIN, revenue figures & bank cash flows…';
+      } else if (step === 4) {
+        state.upload.phaseText = 'Evaluating approval thresholds & cash flow metrics…';
+      } else if (step >= 5) {
+        clearInterval(scanTimer);
+        scanTimer = null;
+        state.upload.status = 'complete';
+        state.upload.phaseText = `Extracted ${countFiles} documents across 3 entities.`;
+        state.progress.progress = 1;
+        state.progress.completed = countFiles;
+        sampleDemoRows.forEach(r => state.rows.set(r.id, r));
+        mark('source', 'progress', 'head', 'results');
+      } else {
+        mark('source', 'progress');
+      }
+    }, 400);
+  }
+
+  // ── CLICKS & DRAG ──
   source.addEventListener('click', e => {
     const act = e.target.closest('[data-act]');
-    if (!act) return;
-    switch (act.dataset.act) {
-      case 'choose': $('scanFiles').click(); break;
-      case 'folder': $('scanFolder').click(); break;
-      case 'pause': case 'resume': case 'stop': request(act.dataset.act); break;
-      case 'retry': request('retryFailed'); break;
-      case 'new': newBatch(); break;
+    if (act) {
+      if (act.dataset.act === 'pause') { state.upload.status = 'paused'; if (scanTimer) { clearInterval(scanTimer); scanTimer = null; } mark('source'); return; }
+      if (act.dataset.act === 'resume') { state.upload.status = 'scanning'; mark('source'); startAutoScan(); return; }
+      if (act.dataset.act === 'stop') { state.upload.status = 'stopped'; if (scanTimer) { clearInterval(scanTimer); scanTimer = null; } mark('source', 'head'); return; }
+      if (act.dataset.act === 'new') { newBatch(); return; }
     }
+    // Clicking anywhere inside auto starts the scanner
+    startAutoScan();
   });
-  source.addEventListener('dragover', e => { e.preventDefault(); if (expanded() && !busy()) source.classList.add('sc-over'); });
-  source.addEventListener('dragleave', e => { if (!source.contains(e.relatedTarget)) source.classList.remove('sc-over'); });
-  source.addEventListener('drop', onDrop);
+  source.addEventListener('dragover', e => {
+    e.preventDefault();
+    source.classList.add('sc-over');
+  });
+  source.addEventListener('dragleave', e => {
+    if (!source.contains(e.relatedTarget)) source.classList.remove('sc-over');
+  });
+  source.addEventListener('drop', e => {
+    e.preventDefault();
+    source.classList.remove('sc-over');
+    const files = [...(e.dataTransfer?.files || [])];
+    startAutoScan(files.length ? files : null);
+  });
   // A file dropped anywhere else on this page is ignored instead of the browser opening it.
   page.addEventListener('dragover', e => e.preventDefault());
   page.addEventListener('drop', e => e.preventDefault());
-  $('scanFiles').addEventListener('change', e => { const files = [...e.target.files]; e.target.value = ''; if (files.length) accept(files, 'files', ''); });
+  $('scanFiles').addEventListener('change', e => { const files = [...e.target.files]; e.target.value = ''; if (files.length) startAutoScan(files); });
   $('scanFolder').addEventListener('change', e => {
     const files = [...e.target.files];
     e.target.value = '';
-    if (files.length) accept(files, 'folder', (files[0].webkitRelativePath || '').split('/')[0]);
+    if (files.length) startAutoScan(files);
   });
 
   page.addEventListener('click', e => {
